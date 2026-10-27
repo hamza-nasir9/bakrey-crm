@@ -1,0 +1,38 @@
+/* Branches page (v3) — follows the audit-logs page pattern. */
+.branches-page { min-height: 100vh; background: #f6f7f3; color: #1c2a1e; font-family: Inter, system-ui, sans-serif; }
+.branches-page > header { display: flex; justify-content: space-between; align-items: center; padding: 14px 26px; background: #17301d; color: #f2e8c9; }
+.branches-page > header button { display: inline-flex; gap: 7px; align-items: center; background: transparent; color: inherit; border: 1px solid #47634d; border-radius: 8px; padding: 7px 12px; cursor: pointer; }
+.branches-page > header div { text-align: center; display: grid; }
+.branches-page > header span { font-size: 11px; letter-spacing: .14em; opacity: .75; }
+.branches-page main { max-width: 1180px; margin: 0 auto; padding: 26px 20px 60px; }
+.branches-title { display: flex; justify-content: space-between; align-items: end; gap: 16px; flex-wrap: wrap; }
+.branches-title p { font-size: 11px; letter-spacing: .22em; color: #8a6d1f; font-weight: 700; margin: 0; }
+.branches-title h1 { margin: 4px 0; font-size: 30px; }
+.branches-title span { color: #5b6b5b; font-size: 13px; }
+.branches-primary { display: inline-flex; gap: 7px; align-items: center; background: #1e4630; color: #fff; border: 0; border-radius: 9px; padding: 10px 16px; cursor: pointer; font-weight: 600; }
+.branches-error { display: flex; gap: 9px; align-items: center; background: #fdecec; border: 1px solid #f2b8b5; color: #8c2b26; border-radius: 10px; padding: 10px 14px; margin: 18px 0; font-size: 13px; }
+.branches-error button { margin-left: auto; background: none; border: 0; cursor: pointer; color: inherit; }
+.branches-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; margin: 20px 0; }
+.branch-card { display: flex; gap: 12px; background: #fff; border: 1px solid #dde3d5; border-radius: 12px; padding: 14px; color: #1e4630; }
+.branch-card div { display: grid; gap: 2px; }
+.branch-card span { font-size: 12px; color: #5b6b5b; }
+.branches-panel { background: #fff; border: 1px solid #dde3d5; border-radius: 14px; padding: 18px; margin-top: 18px; }
+.branches-panel h2 { display: flex; gap: 8px; align-items: center; font-size: 17px; margin: 0 0 14px; }
+.branches-form { display: flex; gap: 12px; flex-wrap: wrap; align-items: end; }
+.branches-form label, .branches-modal-form label { display: grid; gap: 5px; font-size: 12px; font-weight: 600; color: #43543f; }
+.branches-form input, .branches-form select, .branches-modal-form input, .branches-modal-form select, .branches-inline select { border: 1px solid #c9d2bf; border-radius: 8px; padding: 8px 10px; font-size: 13px; background: #fff; }
+.branches-inline { display: inline-grid; gap: 5px; font-size: 12px; font-weight: 600; color: #43543f; margin-bottom: 12px; }
+.branches-table { overflow-x: auto; margin-top: 14px; }
+.branches-table table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.branches-table th { text-align: left; color: #5b6b5b; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; padding: 8px; border-bottom: 1px solid #e3e8da; }
+.branches-table td { padding: 8px; border-bottom: 1px solid #eef1e7; }
+.branches-total td { background: #f3f6ec; border-top: 2px solid #1e4630; }
+.branches-note { font-size: 12px; color: #5b6b5b; margin: 10px 0 0; }
+.branches-back { position: fixed; inset: 0; background: rgba(16, 26, 18, .55); display: grid; place-items: center; z-index: 40; }
+.branches-modal { background: #fff; border-radius: 16px; width: min(480px, 92vw); padding: 20px; }
+.branches-modal-head { display: flex; justify-content: space-between; align-items: center; }
+.branches-modal-head h2 { margin: 0; font-size: 18px; }
+.branches-modal-head button { background: none; border: 0; cursor: pointer; }
+.branches-modal-form { display: grid; gap: 12px; margin-top: 14px; }
+.branches-modal-form footer { display: flex; justify-content: end; gap: 10px; }
+.branches-modal-form footer > button:first-child { background: #eef1e7; border: 0; border-radius: 9px; padding: 10px 16px; cursor: pointer; }

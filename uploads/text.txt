@@ -1,0 +1,729 @@
+# AL KAUSAR BAKREY — Complete Business Management Website (Master Prompt)
+
+## Project Overview
+
+Mujhe ek **complete web-based Business Management System** develop karna hai jiska naam **AL KAUSAR BAKREY** hoga.
+
+Yeh website meri livestock/bakra business ko end-to-end manage karegi. Is website ka purpose yeh hai ke business ka har record ek hi platform par available ho aur real-time monitoring ho sake.
+
+Website par har cheez ka complete record maintain ho:
+
+* Kitna stock aaya
+* Kitna stock gaya
+* Kitni sale hui
+* Kitna cash receive hua
+* Kis cashier ne kitna collect kiya
+* Kis employee ko salary di
+* Kis supplier se purchase hui
+* Kitna expense hua
+* Kitna profit hua
+
+Har module aapas mein linked ho taake reports aur dashboard automatically update hote rahen.
+
+---
+
+# ⚠️ MOST IMPORTANT RULE (Must Follow)
+
+**AI kisi bhi cheez ka decision khud se nahi lega.**
+
+Ismein include hai:
+
+* UI Design
+* Dashboard Layout
+* Navigation
+* Database Structure
+* Colors
+* Icons
+* Field Names
+* Workflow
+* Reports Layout
+* Tables
+* Buttons
+* Forms
+* Any Extra Feature
+
+Har step par pehle mujhse confirmation lena hoga.
+
+**Assumptions lagakar kabhi bhi implementation start nahi karni.**
+
+Jahan koi ambiguity ho wahan ruk kar question poochna hoga.
+
+---
+
+# 1. Authentication & User Roles
+
+## Owner / Admin
+
+Full Access
+
+Admin kar sake:
+
+* Dashboard
+* Inventory
+* Orders
+* Suppliers
+* Employees
+* Attendance
+* Salary
+* Expenses
+* Reports
+* Settings
+* Cashiers
+* Edit/Delete All Data
+* Export Reports
+* Manage Users
+* Backup & Restore
+
+---
+
+## Cashier
+
+Total Cashiers = 4
+
+Har cashier ka:
+
+* Username / PIN Login
+* Apni Shift
+* Apni Entries
+* Shift Closing
+
+Cashier:
+
+Allowed:
+
+* New Orders
+* Receive Payments
+* Shift Closing
+* View Apni Shift
+
+Not Allowed:
+
+* Delete Records
+* Edit Old Entries
+* View Other Cashiers
+* Reports
+* Settings
+
+---
+
+# 2. Shift Management
+
+4 Fixed Shifts
+
+Har Shift ka:
+
+* Start Time
+* End Time
+* Cashier Name
+* Opening Cash
+* Closing Cash
+
+Shift ke dauran:
+
+* Orders
+* Cash Collection
+* Advance Payments
+* Pending Payments
+
+Shift End Form:
+
+* Total Cash Collected
+* Online Payments
+* Cash Payments
+* Difference (Auto)
+* Remarks
+
+Admin ko Shift History mile.
+
+---
+
+# 3. Dashboard
+
+Dashboard par summary cards:
+
+* Total Sales
+* Total Revenue
+* Total Expenses
+* Total Purchase
+* Total Salary
+* Net Profit
+* Pending Payments
+* Total Orders
+* Completed Orders
+* Pending Orders
+* Total Employees
+* Total Suppliers
+* Current Inventory
+* Low Stock Items
+
+Charts:
+
+* Daily Revenue
+* Weekly Revenue
+* Monthly Revenue
+* Expense Graph
+* Profit Graph
+* Orders Graph
+
+Recent Activities
+
+Latest:
+
+* Orders
+* Purchases
+* Expenses
+* Salary
+* Shift Closing
+
+---
+
+# 4. Inventory Management
+
+## Purchase Entry
+
+Fields:
+
+* Date
+* Item Name
+* Category
+* Quantity
+* Unit
+* Purchase Price
+* Total Price
+* Supplier
+* Invoice No
+* Notes
+
+---
+
+## Stock Usage
+
+Fields:
+
+* Date
+* Item
+* Quantity Used
+* Purpose
+* Remarks
+
+---
+
+## Stock Adjustment
+
+Admin Only
+
+Increase / Decrease Stock
+
+Reason Required
+
+---
+
+## Inventory Features
+
+Current Stock
+
+Stock In
+
+Stock Out
+
+Low Stock Alert
+
+Out Of Stock Alert
+
+Inventory History
+
+Search
+
+Filter
+
+Export PDF
+
+Export Excel
+
+---
+
+# 5. Supplier Management
+
+Supplier Profile
+
+Fields:
+
+* Supplier Name
+* Contact Number
+* WhatsApp
+* Address
+* Company Name
+* Notes
+
+Purchase History
+
+Outstanding Balance
+
+Payment History
+
+Search
+
+Export
+
+---
+
+# 6. Employee Management
+
+Employee Profile
+
+* Name
+* CNIC
+* Phone
+* Address
+* Joining Date
+* Position
+* Daily Salary
+* Monthly Salary (Optional)
+* Status
+
+Attendance
+
+Daily
+
+Present
+
+Absent
+
+Leave
+
+Half Day
+
+Attendance Calendar
+
+Attendance History
+
+---
+
+# 7. Salary Management
+
+Salary Entry
+
+Fields:
+
+Employee
+
+Date
+
+Attendance
+
+Amount
+
+Bonus
+
+Deduction
+
+Net Salary
+
+Payment Method
+
+Remarks
+
+Salary History
+
+Daily Salary Report
+
+Monthly Salary Report
+
+Employee Wise Report
+
+PDF
+
+Excel
+
+---
+
+# 8. Customer Management
+
+Customer Profile
+
+* Name
+* Phone
+* Address
+* City
+* Notes
+
+Customer History
+
+Orders
+
+Payments
+
+Pending Balance
+
+Search
+
+---
+
+# 9. Orders / Booking Management
+
+Order Fields
+
+Order Number (Auto)
+
+Booking Date
+
+Delivery Date
+
+Customer
+
+Goat Details
+
+Quantity
+
+Rate
+
+Total Amount
+
+Advance Paid
+
+Remaining Amount
+
+Payment Method
+
+Status
+
+Pending
+
+Completed
+
+Cancelled
+
+Delivered
+
+Order History
+
+Invoice
+
+Print Invoice
+
+PDF Invoice
+
+---
+
+# 10. Payments
+
+Cash
+
+Bank
+
+JazzCash
+
+EasyPaisa
+
+Other
+
+Payment History
+
+Pending Amount
+
+Receive Remaining Balance
+
+Receipt
+
+Print
+
+PDF
+
+---
+
+# 11. Expense Management
+
+Expense Categories
+
+Electricity
+
+Transport
+
+Fuel
+
+Rent
+
+Maintenance
+
+Miscellaneous
+
+Other
+
+Expense Entry
+
+Amount
+
+Category
+
+Date
+
+Description
+
+Attachment
+
+Expense Report
+
+PDF
+
+Excel
+
+---
+
+# 12. Profit & Accounts
+
+Automatic Calculations
+
+Total Revenue
+
+Minus Purchase
+
+Minus Salary
+
+Minus Expenses
+
+Equals Net Profit
+
+Profit Cards
+
+Profit Graph
+
+Loss Graph
+
+Monthly Comparison
+
+Yearly Comparison
+
+---
+
+# 13. Daily Closing
+
+Complete End Of Day Report
+
+Include:
+
+All 4 Cashiers
+
+Shift Collection
+
+Sales
+
+Orders
+
+Payments
+
+Purchases
+
+Inventory Used
+
+Salary
+
+Expenses
+
+Net Profit
+
+Cash In Hand
+
+Pending Payments
+
+Grand Total
+
+Admin Approval
+
+PDF
+
+Print
+
+---
+
+# 14. Reports
+
+Generate Reports
+
+Daily Report
+
+Weekly Report
+
+Monthly Report
+
+Yearly Report
+
+Custom Date Range
+
+Inventory Report
+
+Salary Report
+
+Expense Report
+
+Supplier Report
+
+Employee Report
+
+Customer Report
+
+Orders Report
+
+Cashier Report
+
+Profit Report
+
+Closing Report
+
+Export:
+
+PDF
+
+Excel
+
+CSV
+
+Print
+
+---
+
+# 15. Search & Filters
+
+Every Module Should Support
+
+Search
+
+Date Filter
+
+Employee Filter
+
+Supplier Filter
+
+Cashier Filter
+
+Customer Filter
+
+Status Filter
+
+---
+
+# 16. Notifications
+
+Low Stock
+
+Pending Payments
+
+Shift Not Closed
+
+Salary Pending
+
+Daily Closing Reminder
+
+Optional Email Notifications
+
+Optional SMS Notifications
+
+---
+
+# 17. Settings
+
+Company Profile
+
+Company Name
+
+Logo
+
+Phone
+
+Address
+
+Currency
+
+Backup
+
+Restore
+
+User Management
+
+Permissions
+
+---
+
+# 18. Website Requirements
+
+Responsive Design
+
+Desktop Friendly
+
+Tablet Friendly
+
+Mobile Friendly
+
+Fast Loading
+
+Secure Login
+
+Role Based Access
+
+Clean Interface
+
+Easy Navigation
+
+Professional Look
+
+Simple UI
+
+No unnecessary complexity
+
+---
+
+# 19. Security
+
+Encrypted Passwords
+
+Session Management
+
+Role Based Authorization
+
+Secure Database
+
+Activity Logs
+
+Admin Audit Trail
+
+---
+
+# 20. Technology
+
+**Do not decide the technology stack yourself.**
+
+Before selecting:
+
+* Frontend
+* Backend
+* Database
+* Framework
+* Hosting
+* Authentication
+* Deployment Method
+
+First ask for confirmation.
+
+---
+
+# 21. AI Development Rules (Strict)
+
+The AI must NEVER:
+
+* Assume any feature
+* Remove any requested feature
+* Rename modules
+* Change workflow
+* Change layout
+* Skip any section
+* Add any new functionality without approval
+* Decide UI/UX itself
+* Decide database structure itself
+
+Instead:
+
+1. Complete one module at a time.
+2. Show the proposed implementation.
+3. Wait for approval.
+4. Only then continue to the next module.
+
+The website must include **every feature listed above** without omission. If any requirement is unclear, stop and ask for confirmation before proceeding.

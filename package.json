@@ -1,0 +1,54 @@
+{
+  "name": "bakrey-crm",
+  "private": true,
+  "version": "3.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "server": "node server/index.js",
+    "start": "node server/index.js",
+    "seed:auth": "node server/scripts/seedUsers.js",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "dev:api": "node --watch server/index.js",
+    "test": "node --test server/tests/payroll.test.mjs server/tests/cookieAuth.test.mjs server/tests/analyticsSeries.test.mjs"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.2.1",
+    "axios": "^1.19.0",
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.6.2",
+    "framer-motion": "^12.35.0",
+    "helmet": "^8.3.0",
+    "jsonwebtoken": "^9.0.3",
+    "lucide-react": "^0.577.0",
+    "mongoose": "^9.9.1",
+    "multer": "^2.2.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-router-dom": "^7.13.1",
+    "tailwindcss": "^4.2.1",
+    "xlsx": "^0.18.5",
+    "zod": "^3.24.1",
+    "cookie-parser": "^1.4.7",
+    "recharts": "^2.15.0",
+    "nodemailer": "^6.9.16"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@vitejs/plugin-react": "^5.1.1",
+    "eslint": "^9.39.1",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.4.24",
+    "globals": "^16.5.0",
+    "vite": "^7.3.1"
+  },
+  "description": "Al Kausar Bakrey \u2014 enterprise CRM/POS (React + Express + MongoDB)",
+  "engines": {
+    "node": ">=20"
+  }
+}
