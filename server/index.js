@@ -40,6 +40,17 @@ import { startSchedulers } from "./jobs/scheduler.js";
 const app = express();
 app.set("trust proxy", 1);
 
+// Serverless Database Connection Middleware
+app.use(async (req, res, next) => {
+  try {
+    await connectDatabase();
+    next();
+  } catch (error) {
+    console.error("Database middleware connection error:", error);
+    return res.status(500).json({ message: "Database connection failed" });
+  }
+});
+
 app.use(helmet());
 app.use(cookieParser());
 
