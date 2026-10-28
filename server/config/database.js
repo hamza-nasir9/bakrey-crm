@@ -1,23 +1,50 @@
 /**
- * MongoDB connection.
- * NOTE on transactions: atomic multi-document writes (order delivery ->
- * stock deduction) use MongoDB transactions when the deployment supports
- * them (Atlas always does — it is a replica set). Against a standalone
- * local mongod the order service falls back to guarded atomic updates with
- * compensating rollback; see services/orderStockService.js.
+ * MongoDB connection optimized for Vercel Serverless Functions.
  */
 import mongoose from 'mongoose'
 import env from './env.js'
 
+let cached = global.mongoose
+
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null }
+}
+
 export async function connectDatabase() {
-  mongoose.set('strictQuery', true)
-  mongoose.connection.on('disconnected', () => console.warn('[db] MongoDB disconnected'))
-  mongoose.connection.on('reconnected', () => console.log('[db] MongoDB reconnected'))
-  await mongoose.connect(env.MONGODB_URI, { serverSelectionTimeoutMS: 10_000, maxPoolSize: 20 })
-  console.log(`[db] MongoDB connected: ${mongoose.connection.host}`)
-  return mongoose.connection
+  if (cached.conn) {
+    return cached.conn
+  }
+
+  if (!cached.promise) {
+    mongoose.set('strictQuery', true)
+
+    // Buffering ko disable karein taake Mongoose disconnected state mein requests ko 10s tak hold na rakhe
+    mongoose.set('bufferCommands', false)
+
+    mongoose.connection.on('disconnected', () => console.warn('[db] MongoDB disconnected'))
+    mongoose.connection.on('reconnected', () => console.log('[db] MongoDB reconnected'))
+
+    cached.promise = mongoose.connect(env.MONGODB_URI, {
+      serverSelectionTimeoutMS: 5000,
+      maxPoolSize: 10,
+    }).then((m) => {
+      console.log(`[db] MongoDB connected: ${m.connection.host}`)
+      return m.connection
+    })
+  }
+
+  try {
+    cached.conn = await cached.promise
+  } catch (e) {
+    cached.promise = null
+    throw e
+  }
+
+  return cached.conn
 }
 
 export async function disconnectDatabase() {
   await mongoose.disconnect()
+  cached.conn = null
+  cached.promise = null
 }

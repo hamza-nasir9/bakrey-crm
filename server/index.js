@@ -38,7 +38,7 @@ import recipeRoutes from "./routes/recipeRoutes.js";
 import { startSchedulers } from "./jobs/scheduler.js";
 
 const app = express();
-if (env.TRUST_PROXY) app.set("trust proxy", 1);
+app.set("trust proxy", 1);
 
 app.use(helmet());
 app.use(cookieParser());
