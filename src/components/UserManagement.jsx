@@ -1,7 +1,380 @@
-import {useEffect,useState} from 'react'
-import {AlertCircle,ArrowLeft,KeyRound,Plus,Search,X} from 'lucide-react'
-import api from '../lib/api.js'
-import './userManagement.css'
-const blank={username:'',name:'',employee:'',role:'CASHIER',password:'',pin:'',forceCredentialChange:true}
-export default function UserManagement({user,logout}){const [users,setUsers]=useState([]),[employees,setEmployees]=useState([]),[search,setSearch]=useState(''),[status,setStatus]=useState(''),[error,setError]=useState(''),[form,setForm]=useState(null),[edit,setEdit]=useState(null),[reset,setReset]=useState(null);const load=async()=>{try{const [list,opt]=await Promise.all([api.get('/users',{params:{search,status}}),api.get('/users/options')]);setUsers(list.data.users);setEmployees(opt.data.employees);setError('')}catch(e){setError(e.response?.data?.message||'Unable to load user accounts.')}};useEffect(()=>{const t=setTimeout(load,250);return()=>clearTimeout(t)},[search,status]);const save=async e=>{e.preventDefault();try{edit?await api.patch(`/users/${edit.id}`,form):await api.post('/users',form);setForm(null);setEdit(null);load()}catch(e){setError(e.response?.data?.message||'Could not save user.')}};const resetSave=async e=>{e.preventDefault();try{await api.post(`/users/${reset.id}/reset-credentials`,reset);setReset(null);load()}catch(e){setError(e.response?.data?.message||'Could not reset credentials.')}};if(user.role!=='ADMIN')return <div className="um-denied"><AlertCircle/><h2>User Management is restricted</h2><button onClick={logout}>Sign out</button></div>;return <div className="um-page"><header><button onClick={()=>history.back()}><ArrowLeft size={18}/>System Center</button><div><b>AL KAUSAR BAKREY</b><span>User Management</span></div><button onClick={logout}>Sign out</button></header><main><div className="um-title"><div><p>SECURE ACCOUNT ADMINISTRATION</p><h1>Users & access</h1><span>Create and manage Admin or Cashier accounts without re-seeding.</span></div><button className="um-primary" onClick={()=>{setEdit(null);setForm(blank)}}><Plus size={16}/>Create User</button></div><div className="um-tools"><label><Search size={16}/><input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Username, employee, or role"/></label><select value={status} onChange={e=>setStatus(e.target.value)}><option value="">All Statuses</option><option value="active">Active</option><option value="inactive">Inactive</option></select></div>{error&&<div className="um-error"><AlertCircle size={17}/>{error}<button onClick={()=>setError('')}><X size={15}/></button></div>}<section className="um-table"><table><thead><tr><th>Username</th><th>Name</th><th>Linked Employee</th><th>Role</th><th>Status</th><th>Credential Change</th><th>Action</th></tr></thead><tbody>{users.map(account=><tr key={account.id}><td><b>{account.username}</b></td><td>{account.name}</td><td>{account.employee?`${account.employee.employeeId} · ${account.employee.name}`:'—'}</td><td>{account.role==='ADMIN'?'Owner / Admin':form.role==='MANAGER'?'Manager':'Cashier'}</td><td><span className={account.isActive?'um-active':'um-off'}>{account.isActive?'Active':'Inactive'}</span></td><td>{account.forceCredentialChange?'Required':'Not required'}</td><td><button onClick={()=>{setEdit(account);setForm({username:account.username,name:account.name,employee:account.employee?._id||'',role:account.role,isActive:account.isActive,forceCredentialChange:account.forceCredentialChange})}}>Edit</button><button onClick={()=>setReset({id:account.id,role:account.role,password:'',pin:'',forceCredentialChange:true})}><KeyRound size={14}/>Reset</button></td></tr>)}</tbody></table></section></main>{form&&<Modal title={edit?'Edit User':'Create User'} close={()=>setForm(null)}><form className="um-form" onSubmit={save}><label>Username<input required value={form.username} onChange={e=>setForm({...form,username:e.target.value})}/></label><label>Display Name<input required value={form.name} onChange={e=>setForm({...form,name:e.target.value})}/></label><label>Role<select value={form.role} onChange={e=>setForm({...form,role:e.target.value})}><option value="ADMIN">Owner / Admin</option><option value="CASHIER">Cashier</option><option value="MANAGER">Manager</option></select></label><label>Linked Employee<select value={form.employee} onChange={e=>setForm({...form,employee:e.target.value})}><option value="">No linked employee</option>{employees.map(x=><option key={x._id} value={x._id}>{x.employeeId} · {x.name}</option>)}</select></label>{!edit&&<label className="wide">{form.role==='CASHIER'?'Numeric PIN (4–8 digits)':'Password (minimum 8 characters)'}<input required type="password" value={form.role==='CASHIER'?form.pin:form.password} onChange={e=>setForm({...form,[form.role==='CASHIER'?'pin':'password']:e.target.value})}/></label>}<label className="wide check"><input type="checkbox" checked={form.forceCredentialChange} onChange={e=>setForm({...form,forceCredentialChange:e.target.checked})}/>Force credential change at next sign-in</label>{edit&&<label className="wide check"><input type="checkbox" checked={form.isActive} onChange={e=>setForm({...form,isActive:e.target.checked})}/>Account active</label>}<footer><button type="button" onClick={()=>setForm(null)}>Cancel</button><button className="um-primary">Save User</button></footer></form></Modal>}{reset&&<Modal title={`Reset ${reset.role==='ADMIN'?'Password':'PIN'}`} close={()=>setReset(null)}><form className="um-form" onSubmit={resetSave}><label className="wide">New {reset.role==='ADMIN'?'Password':'Numeric PIN'}<input required type="password" value={reset.role==='ADMIN'?reset.password:reset.pin} onChange={e=>setReset({...reset,[reset.role==='ADMIN'?'password':'pin']:e.target.value})}/></label><label className="wide check"><input type="checkbox" checked={reset.forceCredentialChange} onChange={e=>setReset({...reset,forceCredentialChange:e.target.checked})}/>Force credential change at next sign-in</label><footer><button type="button" onClick={()=>setReset(null)}>Cancel</button><button className="um-primary">Reset Credentials</button></footer></form></Modal>}</div>}
-function Modal({title,close,children}){return <div className="um-back" onMouseDown={close}><section className="um-modal" onMouseDown={e=>e.stopPropagation()}><div><h2>{title}</h2><button onClick={close}><X/></button></div>{children}</section></div>}
+import { useEffect, useState } from "react";
+import {
+  AlertCircle,
+  ArrowLeft,
+  KeyRound,
+  Plus,
+  Search,
+  X,
+} from "lucide-react";
+import api from "../lib/api.js";
+import "./userManagement.css";
+
+const blank = {
+  username: "",
+  name: "",
+  employee: "",
+  role: "CASHIER",
+  password: "",
+  pin: "",
+  forceCredentialChange: true,
+};
+
+export default function UserManagement({ user, logout }) {
+  const [users, setUsers] = useState([]),
+    [employees, setEmployees] = useState([]),
+    [search, setSearch] = useState(""),
+    [status, setStatus] = useState(""),
+    [error, setError] = useState(""),
+    [form, setForm] = useState(null),
+    [edit, setEdit] = useState(null),
+    [reset, setReset] = useState(null);
+
+  const load = async () => {
+    try {
+      const [list, opt] = await Promise.all([
+        api.get("/users", { params: { search, status } }),
+        api.get("/users/options"),
+      ]);
+      setUsers(list.data.users);
+      setEmployees(opt.data.employees);
+      setError("");
+    } catch (e) {
+      setError(e.response?.data?.message || "Unable to load user accounts.");
+    }
+  };
+
+  useEffect(() => {
+    const t = setTimeout(load, 250);
+    return () => clearTimeout(t);
+  }, [search, status]);
+
+  const save = async (e) => {
+    e.preventDefault();
+    try {
+      edit
+        ? await api.patch(`/users/${edit.id}`, form)
+        : await api.post("/users", form);
+      setForm(null);
+      setEdit(null);
+      load();
+    } catch (e) {
+      setError(e.response?.data?.message || "Could not save user.");
+    }
+  };
+
+  const resetSave = async (e) => {
+    e.preventDefault();
+    try {
+      await api.post(`/users/${reset.id}/reset-credentials`, reset);
+      setReset(null);
+      load();
+    } catch (e) {
+      setError(e.response?.data?.message || "Could not reset credentials.");
+    }
+  };
+
+  if (user.role !== "ADMIN")
+    return (
+      <div className="um-denied">
+        <AlertCircle />
+        <h2>User Management is restricted</h2>
+        <button onClick={logout}>Sign out</button>
+      </div>
+    );
+
+  return (
+    <div className="um-page">
+      <header>
+        <button onClick={() => history.back()}>
+          <ArrowLeft size={18} />
+          System Center
+        </button>
+        <div>
+          <b>AL KAUSAR BAKREY</b>
+          <span>User Management</span>
+        </div>
+        <button onClick={logout}>Sign out</button>
+      </header>
+      <main>
+        <div className="um-title">
+          <div>
+            <p>SECURE ACCOUNT ADMINISTRATION</p>
+            <h1>Users & access</h1>
+            <span>
+              Create and manage Admin or Cashier accounts without re-seeding.
+            </span>
+          </div>
+          <button
+            className="um-primary"
+            onClick={() => {
+              setEdit(null);
+              setForm(blank);
+            }}
+          >
+            <Plus size={16} />
+            Create User
+          </button>
+        </div>
+        <div className="um-tools">
+          <label>
+            <Search size={16} />
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Username, employee, or role"
+            />
+          </label>
+          <select value={status} onChange={(e) => setStatus(e.target.value)}>
+            <option value="">All Statuses</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
+        {error && (
+          <div className="um-error">
+            <AlertCircle size={17} />
+            {error}
+            <button onClick={() => setError("")}>
+              <X size={15} />
+            </button>
+          </div>
+        )}
+        <section className="um-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Username</th>
+                <th>Name</th>
+                <th>Linked Employee</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Credential Change</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.map((account) => (
+                <tr key={account.id}>
+                  <td>
+                    <b>{account.username}</b>
+                  </td>
+                  <td>{account.name}</td>
+                  <td>
+                    {account.employee
+                      ? `${account.employee.employeeId} · ${account.employee.name}`
+                      : "—"}
+                  </td>
+                  <td>
+                    {account.role === "ADMIN"
+                      ? "Owner / Admin"
+                      : account.role === "MANAGER"
+                        ? "Manager"
+                        : "Cashier"}
+                  </td>
+                  <td>
+                    <span className={account.isActive ? "um-active" : "um-off"}>
+                      {account.isActive ? "Active" : "Inactive"}
+                    </span>
+                  </td>
+                  <td>
+                    {account.forceCredentialChange
+                      ? "Required"
+                      : "Not required"}
+                  </td>
+                  <td>
+                    <button
+                      onClick={() => {
+                        setEdit(account);
+                        setForm({
+                          username: account.username,
+                          name: account.name,
+                          employee: account.employee?._id || "",
+                          role: account.role,
+                          isActive: account.isActive,
+                          forceCredentialChange: account.forceCredentialChange,
+                        });
+                      }}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() =>
+                        setReset({
+                          id: account.id,
+                          role: account.role,
+                          password: "",
+                          pin: "",
+                          forceCredentialChange: true,
+                        })
+                      }
+                    >
+                      <KeyRound size={14} />
+                      Reset
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+      </main>
+      {form && (
+        <Modal
+          title={edit ? "Edit User" : "Create User"}
+          close={() => setForm(null)}
+        >
+          <form className="um-form" onSubmit={save}>
+            <label>
+              Username
+              <input
+                required
+                value={form.username}
+                onChange={(e) => setForm({ ...form, username: e.target.value })}
+              />
+            </label>
+            <label>
+              Display Name
+              <input
+                required
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+              />
+            </label>
+            <label>
+              Role
+              <select
+                value={form.role}
+                onChange={(e) => setForm({ ...form, role: e.target.value })}
+              >
+                <option value="ADMIN">Owner / Admin</option>
+                <option value="CASHIER">Cashier</option>
+                <option value="MANAGER">Manager</option>
+              </select>
+            </label>
+            <label>
+              Linked Employee
+              <select
+                value={form.employee}
+                onChange={(e) => setForm({ ...form, employee: e.target.value })}
+              >
+                <option value="">No linked employee</option>
+                {employees.map((x) => (
+                  <option key={x._id} value={x._id}>
+                    {x.employeeId} · {x.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+            {!edit && (
+              <label className="wide">
+                {form.role === "CASHIER"
+                  ? "Numeric PIN (4–8 digits)"
+                  : "Password (minimum 8 characters)"}
+                <input
+                  required
+                  type="password"
+                  value={form.role === "CASHIER" ? form.pin : form.password}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      [form.role === "CASHIER" ? "pin" : "password"]:
+                        e.target.value,
+                    })
+                  }
+                />
+              </label>
+            )}
+            <label className="wide check">
+              <input
+                type="checkbox"
+                checked={form.forceCredentialChange}
+                onChange={(e) =>
+                  setForm({ ...form, forceCredentialChange: e.target.checked })
+                }
+              />
+              Force credential change at next sign-in
+            </label>
+            {edit && (
+              <label className="wide check">
+                <input
+                  type="checkbox"
+                  checked={form.isActive}
+                  onChange={(e) =>
+                    setForm({ ...form, isActive: e.target.checked })
+                  }
+                />
+                Account active
+              </label>
+            )}
+            <footer>
+              <button type="button" onClick={() => setForm(null)}>
+                Cancel
+              </button>
+              <button className="um-primary">Save User</button>
+            </footer>
+          </form>
+        </Modal>
+      )}
+      {reset && (
+        <Modal
+          title={`Reset ${reset.role === "ADMIN" ? "Password" : "PIN"}`}
+          close={() => setReset(null)}
+        >
+          <form className="um-form" onSubmit={resetSave}>
+            <label className="wide">
+              New {reset.role === "ADMIN" ? "Password" : "Numeric PIN"}
+              <input
+                required
+                type="password"
+                value={reset.role === "ADMIN" ? reset.password : reset.pin}
+                onChange={(e) =>
+                  setReset({
+                    ...reset,
+                    [reset.role === "ADMIN" ? "password" : "pin"]:
+                      e.target.value,
+                  })
+                }
+              />
+            </label>
+            <label className="wide check">
+              <input
+                type="checkbox"
+                checked={reset.forceCredentialChange}
+                onChange={(e) =>
+                  setReset({
+                    ...reset,
+                    forceCredentialChange: e.target.checked,
+                  })
+                }
+              />
+              Force credential change at next sign-in
+            </label>
+            <footer>
+              <button type="button" onClick={() => setReset(null)}>
+                Cancel
+              </button>
+              <button className="um-primary">Reset Credentials</button>
+            </footer>
+          </form>
+        </Modal>
+      )}
+    </div>
+  );
+}
+
+function Modal({ title, close, children }) {
+  return (
+    <div className="um-back" onMouseDown={close}>
+      <section className="um-modal" onMouseDown={(e) => e.stopPropagation()}>
+        <div>
+          <h2>{title}</h2>
+          <button onClick={close}>
+            <X />
+          </button>
+        </div>
+        {children}
+      </section>
+    </div>
+  );
+}
